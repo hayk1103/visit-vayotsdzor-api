@@ -1,6 +1,10 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const env = require('./env')
+
+// middlewares
+const useAuth = require('./middlewares/useAuth')
 
 // controllers
 const authController = require('./controllers/authController')
@@ -8,18 +12,17 @@ const authController = require('./controllers/authController')
 
 const app = express()
 
-// 'mongodb+srv://AidaZaqaryan:tour-app-2019@visit-vayots-dzor-7zgnp.mongodb.net/visit-vayots-dzor'
-mongoose.connect('mongodb://localhost:27017/visit-vayots-dzor', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(env.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 
-app.use(express.json())
 app.use(cors())
+app.use(express.json())
 
 // implement image upload using multer
 
 app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)
 
-// app.get('/api/user', authController.get)
+app.get('/api/user', useAuth, authController.get)
 // app.delete('/api/user', authController.delete)
 // app.put('/api/user', authController.update)
 
