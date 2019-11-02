@@ -53,6 +53,8 @@ module.exports = {
     update: function (req, res) {
         ['_id', '_v', 'createdAt', 'updatedAt', 'password', 'email'].forEach(field => delete req.body[field])
 
+        console.log(req.body)
+
         userModel
             .updateOne(
                 { _id: req.user._id },

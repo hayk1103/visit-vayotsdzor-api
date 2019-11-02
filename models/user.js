@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     fullName: String,
     aboutMe: String,
     interests: String,
-    profilePicture: String,
+    avatar: String,
 }, {
     timestamps: true
 })
