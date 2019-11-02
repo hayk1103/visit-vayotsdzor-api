@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const morgan = require('morgan')
 const env = require('./env')
 const upload = require('./middlewares/upload')
 
@@ -17,6 +18,7 @@ mongoose.connect(env.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true
 
 app.use(cors())
 app.use(express.json())
+app.use(morgan('dev'))
 app.use('/storage', express.static('storage'))
 
 app.post('/api/image', [useAuth, upload.single('image')], (req, res) => {
