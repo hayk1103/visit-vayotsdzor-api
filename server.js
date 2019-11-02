@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const env = require('./env')
+const upload = require('./middlewares/upload')
 
 // middlewares
 const useAuth = require('./middlewares/useAuth')
@@ -17,7 +18,11 @@ mongoose.connect(env.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true
 app.use(cors())
 app.use(express.json())
 
-// implement image upload using multer
+app.post('/api/image', [useAuth, upload.single('image')], (req, res) => {
+    console.log(req.file)
+
+    return res.json({ file: req.file })
+})
 
 app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)

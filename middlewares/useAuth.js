@@ -3,7 +3,12 @@ const env = require('../env')
 const userModel = require('../models/user')
 
 module.exports = (req, res, next) => {
-    jwt.verify(req.headers['authorization'].replace('Bearer ', ''), env.secret, (err, payload) => {
+    if (!req.headers['authorization']) {
+        return res.status(401).json({ message: 'Unauthorized' })
+    }
+
+    const token = req.headers['authorization'].replace('Bearer ', '')
+    jwt.verify(token, env.secret, (err, payload) => {
         if(err || !payload._id) return res.status(401).json({ message: 'Unauthorized' })
 
         userModel

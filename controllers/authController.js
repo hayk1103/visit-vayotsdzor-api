@@ -5,7 +5,6 @@ const env = require('../env')
 
 const userModel = require('../models/user')
 
-const { IncomingForm } = require('formidable')
 const randomstring = require('randomstring')
 const ObjectId = require('mongodb').ObjectId
 
