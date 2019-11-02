@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose')
+const cors = require('cors')
 
 // controllers
 const authController = require('./controllers/authController')
@@ -11,6 +12,7 @@ const app = express()
 mongoose.connect('mongodb://localhost:27017/visit-vayots-dzor', { useNewUrlParser: true, useUnifiedTopology: true })
 
 app.use(express.json())
+app.use(cors())
 
 // implement image upload using multer
 
