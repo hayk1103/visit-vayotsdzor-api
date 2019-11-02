@@ -21,11 +21,7 @@ app.use(express.json())
 app.use(morgan('dev'))
 app.use('/storage', express.static('storage'))
 
-app.post('/api/image', [useAuth, upload.single('image')], (req, res) => {
-    console.log(req.file)
-
-    return res.json({ file: req.file })
-})
+app.post('/api/image', [useAuth, upload.single('image')], (req, res) => res.json({ file: req.file }))
 
 app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)
