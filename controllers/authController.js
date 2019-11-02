@@ -1,6 +1,9 @@
 const crypto = require('crypto')
 const fs = require('fs')
 const jwt = require('jsonwebtoken')
+
+const userModel = require('../models/user')
+
 const { IncomingForm } = require('formidable')
 const randomstring = require('randomstring')
 const ObjectId = require('mongodb').ObjectId
@@ -11,38 +14,22 @@ const useAuth = require('../middlewares/useAuth')
 const date = new Date
 
 module.exports = {
-    signup: function(req, res, collection) {
+    signup: function(req, res) {
         if(req.body.password !== req.body.passwordConfirmation) {
-            res.writeHead(400)
-            return res.end(JSON.stringify({status: 400, message: 'Password does not match'}))
+            return res.status(500).json({ message: 'Password does not match' })
         }
 
-        collection
-            .find({
-                $or: [
-                    {email: req.body.email},
-                    {username: req.body.username}
-                ]
-            })
-            .toArray()
-            .then(user => {
-                if(user.length !== 0) {
-                    return res.end(JSON.stringify('This email or username has been already used.'))
-                }
-
-                collection
-                    .insertOne({
-                        ...req.body,
-                        password: crypto.createHash('md5').update(req.body.password).digest('hex'),
-                        registerDate: date.toISOString().split('T')[0]
-                    })
-                    .then(data => {
-                        console.log(data)
-                        res.end(JSON.stringify({message: 'User successfully adds.'}))
-                    })
-                    .catch(e => errorHandler.serverError(e, res))
-            })
-            .catch(e => errorHandler.invalidCredentials)
+        userModel.insertOne({
+            ...req.body,
+            password: crypto.createHash('md5').update(req.body.password).digest('hex'),
+            registerDate: date.toISOString().split('T')[0]
+        }).then(user => {
+            console.log(user)
+            return res.json({ user })
+        }).catch(e => {
+            console.log(e)
+            return res.status(500).send(e)
+        })
     },
     login: function (req, res, collection) {
         collection
