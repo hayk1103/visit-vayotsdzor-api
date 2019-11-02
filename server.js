@@ -17,6 +17,7 @@ mongoose.connect(env.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true
 
 app.use(cors())
 app.use(express.json())
+app.use('/storage', express.static('storage'))
 
 app.post('/api/image', [useAuth, upload.single('image')], (req, res) => {
     console.log(req.file)
@@ -28,8 +29,8 @@ app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)
 
 app.get('/api/user', useAuth, authController.get)
+app.put('/api/user', useAuth, authController.update)
 // app.delete('/api/user', authController.delete)
-// app.put('/api/user', authController.update)
 
 // app.get('/api/activity', activityController.getOne)
 // app.post('/api/activity', activityController.add)

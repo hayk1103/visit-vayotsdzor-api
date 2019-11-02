@@ -50,25 +50,17 @@ module.exports = {
             user: req.user
         })
     },
-    // update: function (req, res, collection) {
-    //     useAuth.authorization(req, res, collection, user => {
-    //         interests = req.body.interests.split(' ')
-    //         collection
-    //             .updateOne({_id: ObjectId(user._id)}, 
-    //                 {$set: {
-    //                     username: req.body.username,
-    //                     fullName: req.body.fullName,
-    //                     aboutMe: req.body.aboutMe,
-    //                     interests: interests,
-    //                     profilePicture: req.body.profilePicture
-    //                 }
-    //             })
-    //             .then(data => {
-    //                 res.end('user info  updates')
-    //             })
-    //             .catch(err => errorHandler.serverError(err, res))
-    //     })
-    // },
+    update: function (req, res) {
+        ['_id', '_v', 'createdAt', 'updatedAt', 'password', 'email'].forEach(field => delete req.body[field])
+
+        userModel
+            .updateOne(
+                { _id: req.user._id },
+                { $set: req.body }
+            )
+            .then(() => res.json({ success: true }))
+            .catch(e => res.status(500).send(e))
+    },
     // delete: function (req, res, collection) {
     //     useAuth.authorization(req, res, collection, user => {
     //         collection
@@ -79,30 +71,4 @@ module.exports = {
     //             .catch(err => errorHandler.serverError(err, res))
     //     })
     // },
-    // uploadImage: function (req, res) {
-    //     if(req.headers['content-type'].startsWith('multipart/form-data')){
-    //         const  form = new IncomingForm()
-    //         form.uploadDir = './storage'
-    //         form.keepExtensions = true
-    
-    //         form.parse(req, (err, fields, files) => {
-    //             res.end(JSON.stringify({
-    //                 path: files.image.path
-    //             }))
-    //         })
-    //     } else if (req.headers['content-type'] === 'application/octet-stream') {
-    //         if (!req.query.extension) {
-    //             res.writeHead(500)
-    //             return res.end(JSON.stringify({ message: 'Extension is required!' }))
-    //         }
-
-    //         const data = []
-    //         req.on('data', chunk => data.push(chunk))
-    //         req.on('end', () => {
-    //             const path = `storage/upload_${new Date().getTime()}-${randomstring.generate(6)}.${req.query.extension}`
-    //             fs.writeFileSync(`./${path}`, Buffer.concat(data))
-    //             res.end(JSON.stringify({ path }))
-    //         })
-    //     }
-    // }
 }
