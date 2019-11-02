@@ -2,24 +2,6 @@ const jwt = require('jsonwebtoken')
 const errorHandler = require('./errorHandler')
 const ObjectId = require('mongodb').ObjectId
 module.exports = {
-    checkEmail: (res, req, collection, next) => {
-        collection
-            .find({
-                $or: [
-                    {email: req.body.email},
-                    {username: req.body.username}
-                ]
-            })
-            .toArray()
-            .then(user => {
-                if(user.length !== 0) {
-                    res.end(JSON.stringify('This email or username has been already used.'))
-                } else {
-                    next()
-                }
-            })
-            .catch(e => errorHandler.invalidCredentials)
-    }, 
     authorization: (req, res, collection, next) => {
         jwt.verify(req.headers['authorization'], 'sectetKey', (err, payload) => {
             if(err) {

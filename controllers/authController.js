@@ -12,26 +12,37 @@ const date = new Date
 
 module.exports = {
     signup: function(req, res, collection) {
-        useAuth.checkEmail(res, req, collection, () => {
-            if(req.body.password === req.body.passwordConfirmation) {
+        if(req.body.password !== req.body.passwordConfirmation) {
+            res.writeHead(400)
+            return res.end(JSON.stringify({status: 400, message: 'Password does not match'}))
+        }
+
+        collection
+            .find({
+                $or: [
+                    {email: req.body.email},
+                    {username: req.body.username}
+                ]
+            })
+            .toArray()
+            .then(user => {
+                if(user.length !== 0) {
+                    return res.end(JSON.stringify('This email or username has been already used.'))
+                }
+
                 collection
                     .insertOne({
-                        email: req.body.email,
-                        username: req.body.username,
-                        fullName: req.body.fullName,
+                        ...req.body,
                         password: crypto.createHash('md5').update(req.body.password).digest('hex'),
                         registerDate: date.toISOString().split('T')[0]
                     })
                     .then(data => {
-                        
+                        console.log(data)
                         res.end(JSON.stringify({message: 'User successfully adds.'}))
                     })
                     .catch(e => errorHandler.serverError(e, res))
-            } else {
-                res.writeHead(400)
-                res.end(JSON.stringify({status: 400, message: 'Password does not match'}))
-            }
-        })
+            })
+            .catch(e => errorHandler.invalidCredentials)
     },
     login: function (req, res, collection) {
         collection
