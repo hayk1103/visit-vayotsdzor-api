@@ -44,10 +44,7 @@ module.exports = {
         })
     },
     update: function (req, res) {
-        // ['_id', '_v', 'createdAt', 'updatedAt', 'password', 'email'].forEach(field => delete req.body[field]) 
-        // req.body doesn't have this fields
-
-        console.log(req.body)
+        ['_id', '_v', 'createdAt', 'updatedAt', 'password', 'email'].forEach(field => delete req.body[field]) 
 
         userModel
             .updateOne(

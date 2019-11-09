@@ -30,11 +30,11 @@ app.get('/api/user', useAuth, authController.get)
 app.put('/api/user', useAuth, authController.update)
 app.delete('/api/user', useAuth, authController.delete)
 // activity router
-app.post('/api/activity', useAuth, activityController.create)
 app.get('/api/activity',  activityController.getOne)
+app.get('/api/activities', activityController.getAll)
+app.post('/api/activity', useAuth, activityController.create)
 app.put('/api/activity', useAuth, activityController.update)
 app.delete('/api/activity', useAuth, activityController.delete)
-app.get('/api/activities', activityController.getAll)
 
 app.use((err, req, res, next) => {
     console.log(err)

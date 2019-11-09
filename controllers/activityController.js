@@ -33,7 +33,7 @@ module.exports = {
         console.log(req.query.activityId)
         activityModel
             .updateOne(
-                { _id:  req.query.activityId },
+                { _id:  req.query.activityId, creator: req.user._id },
                 { $set: {
                     ...req.body
                 }})
@@ -42,9 +42,7 @@ module.exports = {
     },
     delete: function (req, res) {
         activityModel
-            .deleteOne(
-                { _id: req.query.activityId }
-            )
+            .deleteOne({ _id: req.query.activityId, creator: req.user._id })
             .then(() => res.json({ success: true }))
             .catch(e  => res.status(500).send(e))
     },
