@@ -38,7 +38,7 @@ module.exports = {
                     ...req.body
                 }})
                 .then(() => res.json({ success: true }))
-                .catch(e => res.status(500).send(e))
+                .catch(e => {throw new Error(e)})
     },
     delete: function (req, res) {
         activityModel
@@ -51,10 +51,7 @@ module.exports = {
     getAll: function (req, res) {
         activityModel
             .find()
-            .select('-__v')
-            .then(activities => {
-                return res.json({ activities })
-            })
+            .then(activities => res.json({ activities }))
             .catch(e => res.status(500).send(e))
     }
 }

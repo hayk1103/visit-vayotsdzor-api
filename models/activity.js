@@ -17,13 +17,20 @@ const activitySchema = new mongoose.Schema({
         type: String,
         required: [true, 'Description field is required!']
     },
-    tags: Array,
-    gallery: Array,
+    tags: [String],
+    gallery: [String],
     category: String,
-    likes: Array,
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     likesCount: Number,
-    creator: String
+    creator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }
 }, {
     timestamps: true
 })
-module.exports = mongoose.model('activites', activitySchema)
+
+module.exports = mongoose.model('Activity', activitySchema)
