@@ -36,4 +36,9 @@ app.put('/api/activity', useAuth, activityController.update)
 app.delete('/api/activity', useAuth, activityController.delete)
 app.get('/api/activities', activityController.getAll)
 
+app.use((err, req, res, next) => {
+    console.log(err)
+    return res.status(500).json({ message: err.message || 'Server Error' })
+})
+
 app.listen(3001, () => console.log('Server is listening on localhost:3001'))

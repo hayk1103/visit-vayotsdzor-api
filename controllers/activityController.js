@@ -17,13 +17,16 @@ module.exports = {
     },
     getOne: function (req, res) {
         activityModel
-            .find(
+            .findOne(
                 { _id: req.query.activityId }
             )
-            .then(activities => res.json({ activities }))
-            .catch( e => {
-                console.log(e)
-                res.status(500).send(e)
+            .then(activity => {
+                if (!activity) throw new Error('Activity not found!')
+
+                return res.json({ activity })
+            })
+            .catch(e => {
+                throw new Error(e)
             })
     },
     update: function (req, res) {
