@@ -10,7 +10,7 @@ const useAuth = require('./middlewares/useAuth')
 
 // controllers
 const authController = require('./controllers/authController')
-// const activityController = require('./controllers/activityController')
+const activityController = require('./controllers/activityController')
 
 const app = express()
 
@@ -25,14 +25,20 @@ app.post('/api/image', [useAuth, upload.single('image')], (req, res) => res.json
 
 app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)
-
+// user router
 app.get('/api/user', useAuth, authController.get)
 app.put('/api/user', useAuth, authController.update)
-// app.delete('/api/user', authController.delete)
+app.delete('/api/user', useAuth, authController.delete)
+// activity router
+app.get('/api/activity',  activityController.getOne)
+app.get('/api/activities', activityController.getAll)
+app.post('/api/activity', useAuth, activityController.create)
+app.put('/api/activity', useAuth, activityController.update)
+app.delete('/api/activity', useAuth, activityController.delete)
 
-// app.get('/api/activity', activityController.getOne)
-// app.post('/api/activity', activityController.add)
-// app.put('/api/activity', activityController.update)
-// app.delete('/api/activity', activityController.delete)
+app.use((err, req, res, next) => {
+    console.log(err)
+    return res.status(500).json({ message: err.message || 'Server Error' })
+})
 
 app.listen(3001, () => console.log('Server is listening on localhost:3001'))

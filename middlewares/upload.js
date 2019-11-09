@@ -7,8 +7,14 @@ const crypto = require('crypto')
 module.exports = multer({
     storage: multer.diskStorage({
         destination: (req, file, cb) => {
+<<<<<<< HEAD
             let dest = path.join('storage/')
 
+=======
+            console.log(path)
+            let dest = path.join('storage/')
+            console.log(dest)
+>>>>>>> aida
             if (!fs.existsSync(dest)) {
                 fs.mkdirSync(dest)
             }

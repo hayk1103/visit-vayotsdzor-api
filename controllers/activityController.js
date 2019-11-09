@@ -1,77 +1,55 @@
-const ObjectId = require('mongodb').ObjectId
-
-const errorHandler = require('../middlewares/errorHandler')
-const useAuth = require('../middlewares/useAuth')
+const activityModel = require('../models/activity')
 
 module.exports = {
-    add: function (req, res, userCollection, collection) {
-        useAuth.authorization(req, res, userCollection, user => {
-            if(user) {
-                collection
-                    .insertOne({
-                        location: req.body.location.split(' '),
-                        image: req.body.image,
-                        description: req.body.description,
-                        tags: req.body.tags.split(' '),
-                        gallery: req.body.gallery.split(' '),
-                        likes: null,
-                        likesCount: 0,
-                        creator: user._id,
-                        category: req.body.category.split(' ')
-                    })
-                    .then(data => {
-                        res.end(JSON.stringify({message: 'Activity successfully adds.', id: data.ops[0]._id}))
-                    })
-                    .catch(err => errorHandler.serverError(err, res))
-            } else {
-                res.end(JSON.stringify({message: 'User was deleted.'}))
-                return
-            }
-        })
-    },
-    getOne: function (req, res, collection) {
-        collection
-            .find({_id: ObjectId(req.query.id)})
-            .toArray()
-            .then(data => {
-                res.end(JSON.stringify({activity: data[0]}))
+    create: function (req, res) {
+        console.log(req.body)
+        activityModel.create({
+                ...req.body,
+                likes: null,
+                likesCount: 0,
+                creator: req.user._id,
             })
-            .catch( err => errorHandler.serverError(err, res))
+            .then( user => res.json({ user }))
+            .catch(e => {
+                console.log(e)
+                res.status(500).send(e)
+            })
     },
-    update: function (req, res, collection) {
-        collection
-            .updateOne({_id:  ObjectId(req.query.id)},
+    getOne: function (req, res) {
+        activityModel
+            .findOne(
+                { _id: req.query.activityId }
+            )
+            .then(activity => {
+                if (!activity) throw new Error('Activity not found!')
+
+                return res.json({ activity })
+            })
+            .catch(e => {
+                throw new Error(e)
+            })
+    },
+    update: function (req, res) {
+        console.log(req.query.activityId)
+        activityModel
+            .updateOne(
+                { _id:  req.query.activityId, creator: req.user._id },
                 { $set: {
-                    location: req.body.location.split(' '),
-                    image: req.body.image,
-                    description: req.body.description,
-                    tags: req.body.tags.split(' '),
-                    gallery: req.body.gallery.split(' '),
-                    // likes: user._id,
-                    // likesCount: 0,
-                    // creator: user._id,
-                    category: req.body.category.split(' ')
+                    ...req.body
                 }})
-                .then(data => {
-                    res.end(JSON.stringify({message: 'Activity successfully updates.'}))
-                })
-                .catch(err => errorHandler.serverError(err, res))
+                .then(() => res.json({ success: true }))
+                .catch(e => {throw new Error(e)})
     },
-    delete: function (req, res, collection) {
-        collection
-            .deleteOne({_id: ObjectId(req.query.id)})
-            .then(data =>{
-                res.end(JSON.stringify({message: 'Activity successfully deletes.'}))
-            })
-            .catch(err => errorHandler.serverError(err, res))
+    delete: function (req, res) {
+        activityModel
+            .deleteOne({ _id: req.query.activityId, creator: req.user._id })
+            .then(() => res.json({ success: true }))
+            .catch(e  => res.status(500).send(e))
     },
-    getAll: function (req, res, collection) {
-        collection
-            .find({})
-            .toArray()
-            .then(data => {
-                res.end(JSON.stringify(data.map(item => (item))))
-            })
-            .catch(err => errorHandler.serverError(err, res))
+    getAll: function (req, res) {
+        activityModel
+            .find()
+            .then(activities => res.json({ activities }))
+            .catch(e => res.status(500).send(e))
     }
 }
