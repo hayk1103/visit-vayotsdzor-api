@@ -28,7 +28,8 @@ const activitySchema = new mongoose.Schema({
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
-    }
+    }, 
+    filter: String
 }, {
     timestamps: true
 })

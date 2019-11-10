@@ -2,12 +2,17 @@ const activityModel = require('../models/activity')
 
 module.exports = {
     create: function (req, res) {
-        console.log(req.body)
+        let filter = ''
+        for (const key in req.body) {
+            filter = filter + req.body[key]
+        }
+        console.log(filter)
         activityModel.create({
                 ...req.body,
                 likes: null,
                 likesCount: 0,
                 creator: req.user._id,
+                filter: filter
             })
             .then( user => res.json({ user }))
             .catch(e => {
@@ -51,5 +56,11 @@ module.exports = {
             .find()
             .then(activities => res.json({ activities }))
             .catch(e => res.status(500).send(e))
+    },
+    search: function (req, res) {
+        activityModel
+            .find({filter: { $regex: new RegExp(req.query.search, "i") }})
+            .then(data => res.json({ data }))
+            .catch(e => console.log())
     }
 }

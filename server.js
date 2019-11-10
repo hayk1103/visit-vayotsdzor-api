@@ -37,9 +37,13 @@ app.get('/api/activities', activityController.getAll)
 app.post('/api/activity', useAuth, activityController.create)
 app.put('/api/activity', useAuth, activityController.update)
 app.delete('/api/activity', useAuth, activityController.delete)
+// search router
+app.get('/api/activity/search', activityController.search)
+app.get('/api/user/search', authController.search)
 
 app.use((err, req, res, next) => {
     console.log(err)
+    console.log('server error')
     return res.status(500).json({ message: err.message || 'Server Error' })
 })
 

@@ -61,5 +61,17 @@ module.exports = {
             )
             .then(() =>  res.json({ success: true }))
             .catch(err => res.status(500).send(e))
+    },
+    search: function (req, res) {
+        userModel
+            .find(
+                { $or: [
+                        {username: { $regex: new RegExp(req.query.search, "i") }},
+                        {fullName: { $regex: new RegExp(req.query.search, "i") }}
+                    ]
+                }
+                )
+            .then(data => res.json({ data }))
+            .catch(e => console.log())
     }
 }
