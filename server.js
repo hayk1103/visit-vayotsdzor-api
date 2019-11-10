@@ -1,5 +1,7 @@
 const express = require('express')
+const http = require('http')
 const mongoose = require('mongoose')
+const socketio = require('socket.io')
 const cors = require('cors')
 const morgan = require('morgan')
 const env = require('./env')
@@ -41,4 +43,15 @@ app.use((err, req, res, next) => {
     return res.status(500).json({ message: err.message || 'Server Error' })
 })
 
-app.listen(3001, () => console.log('Server is listening on localhost:3001'))
+const server = http.createServer(app)
+const io = socketio(server)
+
+io.on('connection', (socket) => {
+    console.log('someone connected')
+
+    socket.on('message', (data) => {
+        io.emit('new message', data)
+    })
+})
+
+server.listen(3001, () => console.log('Server is listening on localhost:3001'))
