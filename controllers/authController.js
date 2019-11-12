@@ -17,8 +17,7 @@ module.exports = {
         }).then(user => {
             return res.json({ user })
         }).catch(e => {
-            console.log(e)
-            return res.status(500).send(e)
+            throw new Error(e)
         })
     },
     login: function (req, res) {
@@ -36,7 +35,9 @@ module.exports = {
                     token: jwt.sign({ _id: user._id }, env.secret)
                 })
             })
-            .catch(e => res.status(500).send(e))
+            .catch(e => {
+                throw new Error(e)
+            })
     }, 
     get: function (req, res) {
         return res.json({
@@ -52,7 +53,9 @@ module.exports = {
                 { $set: req.body }
             )
             .then(() => res.json({ success: true }))
-            .catch(e => res.status(500).send(e))
+            .catch(e => {
+                throw new Error(e)
+            })
     },
     delete: function (req, res) {
         userModel
@@ -60,18 +63,19 @@ module.exports = {
                 { _id: req.user._id }
             )
             .then(() =>  res.json({ success: true }))
-            .catch(err => res.status(500).send(e))
+            .catch(err => {
+                throw new Error(e)
+            })
     },
     search: function (req, res) {
         userModel
-            .find(
-                { $or: [
-                        {username: { $regex: new RegExp(req.query.search, "i") }},
-                        {fullName: { $regex: new RegExp(req.query.search, "i") }}
-                    ]
-                }
-                )
+            .find({ $or: 
+                [{username: { $regex: new RegExp(req.query.search, "i") }},
+                {fullName: { $regex: new RegExp(req.query.search, "i") }}]
+            })
             .then(data => res.json({ data }))
-            .catch(e => console.log())
+            .catch(e => {
+                throw new Error(e)
+            })
     }
 }

@@ -38,7 +38,7 @@ app.post('/api/activity', useAuth, activityController.create)
 app.put('/api/activity', useAuth, activityController.update)
 app.delete('/api/activity', useAuth, activityController.delete)
 // search router
-app.get('/api/activity/search', activityController.search)
+app.get('/api/activity/search', useAuth, activityController.search)
 app.get('/api/user/search', authController.search)
 
 app.use((err, req, res, next) => {

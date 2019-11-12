@@ -16,8 +16,7 @@ module.exports = {
             })
             .then( user => res.json({ user }))
             .catch(e => {
-                console.log(e)
-                res.status(500).send(e)
+                throw new Error(e)
             })
     },
     getOne: function (req, res) {
@@ -42,25 +41,33 @@ module.exports = {
                 { $set: {
                     ...req.body
                 }})
-                .then(() => res.json({ success: true }))
-                .catch(e => {throw new Error(e)})
+                .then((data) =>  res.json({ success: true }))
+                .catch(e => {
+                    throw new Error(e)
+                })
     },
     delete: function (req, res) {
         activityModel
             .deleteOne({ _id: req.query.activityId, creator: req.user._id })
             .then(() => res.json({ success: true }))
-            .catch(e  => res.status(500).send(e))
+            .catch(e  => {
+                throw new Error(e)
+            })
     },
     getAll: function (req, res) {
         activityModel
             .find()
             .then(activities => res.json({ activities }))
-            .catch(e => res.status(500).send(e))
+            .catch(e => {
+                throw new Error(e)
+            })
     },
     search: function (req, res) {
         activityModel
             .find({filter: { $regex: new RegExp(req.query.search, "i") }})
             .then(data => res.json({ data }))
-            .catch(e => console.log())
+            .catch(e => {
+                throw new Error(e)
+            })
     }
 }
