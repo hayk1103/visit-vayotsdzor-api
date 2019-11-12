@@ -44,6 +44,14 @@ module.exports = {
             user: req.user
         })
     },
+    getUser: function (req, res) {
+        userModel
+            .findOne({ _id: req.query.id })
+            .then(user => res.json({ user }))
+            .catch(e => {
+                throw new Error(e)
+            })
+    },
     update: function (req, res) {
         ['_id', '_v', 'createdAt', 'updatedAt', 'password', 'email'].forEach(field => delete req.body[field]) 
 

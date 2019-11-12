@@ -29,6 +29,7 @@ app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)
 // user router
 app.get('/api/user', useAuth, authController.get)
+app.get('/api/other/user', useAuth, authController.getUser)
 app.put('/api/user', useAuth, authController.update)
 app.delete('/api/user', useAuth, authController.delete)
 // activity router
