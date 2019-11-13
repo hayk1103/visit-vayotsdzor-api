@@ -39,8 +39,8 @@ app.post('/api/activity', useAuth, activityController.create)
 app.put('/api/activity', useAuth, activityController.update)
 app.delete('/api/activity', useAuth, activityController.delete)
 // search router
-app.get('/api/activity/search', useAuth, activityController.search)
-app.get('/api/user/search', authController.search)
+app.get('/api/activity/search', activityController.search)
+app.get('/api/user/search', useAuth, authController.search)
 
 app.use((err, req, res, next) => {
     console.log(err)
@@ -53,8 +53,8 @@ const io = socketio(server)
 
 io.on('connection', (socket) => {
     console.log('someone connected')
-
     socket.on('message', (data) => {
+        console.log(data)
         io.emit('new message', data)
     })
 })

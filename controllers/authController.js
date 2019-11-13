@@ -78,8 +78,10 @@ module.exports = {
     search: function (req, res) {
         userModel
             .find({ $or: 
-                [{username: { $regex: new RegExp(req.query.search, "i") }},
-                {fullName: { $regex: new RegExp(req.query.search, "i") }}]
+                [
+                    {username: { $regex: new RegExp(req.query.search, "i") }},
+                    {fullName: { $regex: new RegExp(req.query.search, "i") }}
+                ]
             })
             .then(data => res.json({ data }))
             .catch(e => {
