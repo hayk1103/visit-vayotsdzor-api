@@ -1,7 +1,5 @@
 const express = require('express')
-const http = require('http')
 const mongoose = require('mongoose')
-const socketio = require('socket.io')
 const cors = require('cors')
 const morgan = require('morgan')
 const env = require('./env')
@@ -9,10 +7,12 @@ const upload = require('./middlewares/upload')
 
 // middlewares
 const useAuth = require('./middlewares/useAuth')
+const socket = require('./middlewares/socket')
 
 // controllers
 const authController = require('./controllers/authController')
 const activityController = require('./controllers/activityController')
+const messageController = require('./controllers/messageConroller')
 
 const app = express()
 
@@ -41,6 +41,9 @@ app.delete('/api/activity', useAuth, activityController.delete)
 // search router
 app.get('/api/activity/search', activityController.search)
 app.get('/api/user/search', useAuth, authController.search)
+//messsage router
+app.post('/api/messages', [useAuth, socket], messageController.add)
+app.get('/api/messages', [useAuth, socket], messageController.get)
 
 app.use((err, req, res, next) => {
     console.log(err)
@@ -48,15 +51,4 @@ app.use((err, req, res, next) => {
     return res.status(500).json({ message: err.message || 'Server Error' })
 })
 
-const server = http.createServer(app)
-const io = socketio(server)
-
-io.on('connection', (socket) => {
-    console.log('someone connected')
-    socket.on('message', (data) => {
-        console.log(data)
-        io.emit('new message', data)
-    })
-})
-
-server.listen(3001, () => console.log('Server is listening on localhost:3001'))
+app.listen(3001, () => console.log('Server is listening on localhost:3001'))
