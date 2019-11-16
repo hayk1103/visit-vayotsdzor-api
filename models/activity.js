@@ -34,4 +34,7 @@ const activitySchema = new mongoose.Schema({
     timestamps: true
 })
 
+activitySchema.index({ filter: 1 })
+activitySchema.index({ title: 'text', description: 'text', tags: 'text', category: 'text' })
+
 module.exports = mongoose.model('Activity', activitySchema)

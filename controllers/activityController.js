@@ -14,7 +14,7 @@ module.exports = {
                 throw new Error(e)
             })
     },
-    getOne: async function (req, res, next) {
+    getOne: function (req, res, next) {
         activityModel
             .findOne({ _id: req.query.activityId })
             .populate('creator', 'username avatar')
@@ -41,13 +41,13 @@ module.exports = {
                     throw new Error(e)
                 })
     },
-    delete: function (req, res) {
-        activityModel
-            .deleteOne({ _id: req.query.activityId, creator: req.user._id })
-            .then(() => res.json({ success: true }))
-            .catch(e  => {
-                throw new Error(e)
-            })
+    delete: async function (req, res, next) {
+        try {
+            await activityModel.deleteOne({ _id: req.query.activityId, creator: req.user._id })
+            return res.json({ success: true })
+        } catch (e) {
+            return next(e)
+        }
     },
     getAll: function (req, res) {
         activityModel
