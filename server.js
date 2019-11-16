@@ -26,8 +26,6 @@ const io = socketio(server)
 mongoose.connect(env.mongoUrl, { useNewUrlParser: true, useUnifiedTopology: true })
 
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}))
-
-
 app.use(express.json())
 app.use(morgan('dev'))
 app.use('/storage', express.static('storage'))
@@ -38,7 +36,7 @@ app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)
 // user router
 app.get('/api/user', useAuth, authController.get)
-app.get('/api/other/user', useAuth, authController.getUser)
+app.get('/api/other/user', authController.getUser)
 app.put('/api/user', useAuth, authController.update)
 app.delete('/api/user', useAuth, authController.delete)
 // activity router
@@ -54,6 +52,10 @@ app.get('/api/user/search', useAuth, authController.search)
 // app.post('/api/messages', [useAuth, socket], messageController.add)
 app.get('/api/messages', useAuth, messageController.get)
 
+app.use((err, req, res, next) => {
+    console.log(err)
+    return res.status(500).json({ message: err.message || 'Server Error' })
+})
 
 io.on('connection', (socket) => {
     console.log('someone connected')
@@ -62,13 +64,6 @@ io.on('connection', (socket) => {
         io.emit('new message', data)
         messageController.add(data)
     })
-})
-
-
-app.use((err, req, res, next) => {
-    console.log(err)
-    console.log('server error')
-    return res.status(500).json({ message: err.message || 'Server Error' })
 })
 
 server.listen(3001, () => console.log('Server is listening on localhost:3001'))

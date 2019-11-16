@@ -17,7 +17,7 @@ const activitySchema = new mongoose.Schema({
         type: String,
         required: [true, 'Description field is required!']
     },
-    tags: [String],
+    tags: String,
     gallery: [String],
     category: String,
     likes: [{

@@ -2,45 +2,40 @@ const activityModel = require('../models/activity')
 
 module.exports = {
     create: function (req, res) {
-        let filter = ''
-        for (const key in req.body) {
-            filter = filter + req.body[key]
-        }
-        console.log(filter)
         activityModel.create({
                 ...req.body,
                 likes: null,
                 likesCount: 0,
                 creator: req.user._id,
-                filter: filter
+                filter: `${req.body.title} ${req.body.description} ${req.body.tags} ${req.body.category}`
             })
             .then( user => res.json({ user }))
             .catch(e => {
                 throw new Error(e)
             })
     },
-    getOne: function (req, res) {
+    getOne: async function (req, res, next) {
         activityModel
-            .findOne(
-                { _id: req.query.activityId }
-            )
+            .findOne({ _id: req.query.activityId })
+            .populate('creator', 'username avatar')
             .then(activity => {
                 if (!activity) throw new Error('Activity not found!')
 
                 return res.json({ activity })
             })
-            .catch(e => {
-                throw new Error(e)
-            })
+            .catch(next)
     },
     update: function (req, res) {
-        console.log(req.query.activityId)
         activityModel
             .updateOne(
                 { _id:  req.query.activityId, creator: req.user._id },
-                { $set: {
-                    ...req.body
-                }})
+                {
+                    $set: {
+                        ...req.body,
+                        filter: `${req.body.title} ${req.body.description} ${req.body.tags} ${req.body.category}`
+                    }
+                }
+            )
                 .then((data) =>  res.json({ success: true }))
                 .catch(e => {
                     throw new Error(e)
