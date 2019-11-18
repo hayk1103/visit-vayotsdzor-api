@@ -20,11 +20,14 @@ const activitySchema = new mongoose.Schema({
     tags: String,
     gallery: [String],
     category: String,
-    likes: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    likesCount: Number,
+    likes: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
+    },
+    likesCount: {
+        type: Number,
+        default: 0
+    },
     creator: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
