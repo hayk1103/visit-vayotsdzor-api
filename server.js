@@ -49,7 +49,6 @@ app.delete('/api/activity', useAuth, activityController.delete)
 app.get('/api/activity/search', activityController.search)
 app.get('/api/user/search', useAuth, authController.search)
 //messsage router
-// app.post('/api/messages', [useAuth, socket], messageController.add)
 app.get('/api/messages', useAuth, messageController.get)
 
 app.use((err, req, res, next) => {
@@ -60,9 +59,8 @@ app.use((err, req, res, next) => {
 io.on('connection', (socket) => {
     console.log('someone connected')
     socket.on('message', (data) => {
-        console.log(data)
         io.emit('new message', data)
-        messageController.add(data)
+        app.post('/api/messages', useAuth, messageController.add)
     })
 })
 

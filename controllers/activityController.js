@@ -9,10 +9,10 @@ module.exports = {
                 creator: req.user._id,
                 filter: `${req.body.title} ${req.body.description} ${req.body.tags} ${req.body.category}`
             })
-            .then( user => res.json({ user }))
+                .then( user => res.json({ user }))
             .catch(e => {
                 throw new Error(e)
-            })
+                })
     },
     getOne: function (req, res, next) {
         activityModel
