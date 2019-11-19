@@ -16,6 +16,7 @@ const socket = require('./middlewares/socket')
 
 // controllers
 const authController = require('./controllers/authController')
+const userController = require('./controllers/userController')
 const activityController = require('./controllers/activityController')
 const messageController = require('./controllers/messageConroller')
 
@@ -35,10 +36,10 @@ app.post('/api/image', [useAuth, upload.single('image')], (req, res) => res.json
 app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)
 // user router
-app.get('/api/user', useAuth, authController.get)
-app.get('/api/other/user', authController.getUser)
-app.put('/api/user', useAuth, authController.update)
-app.delete('/api/user', useAuth, authController.delete)
+app.get('/api/user', useAuth, userController.get)
+app.get('/api/other/user', userController.getUser)
+app.put('/api/user', useAuth, userController.update)
+app.delete('/api/user', useAuth, userController.delete)
 // activity router
 app.get('/api/activity',  activityController.getOne)
 app.get('/api/activities', activityController.getAll)
@@ -47,7 +48,7 @@ app.put('/api/activity', useAuth, activityController.update)
 app.delete('/api/activity', useAuth, activityController.delete)
 // search router
 app.get('/api/activity/search', activityController.search)
-app.get('/api/user/search', useAuth, authController.search)
+app.get('/api/user/search', useAuth, userController.search)
 //messsage router
 app.get('/api/messages', useAuth, messageController.get)
 
