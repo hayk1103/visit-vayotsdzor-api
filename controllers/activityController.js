@@ -1,7 +1,7 @@
 const activityModel = require('../models/activity')
 
 module.exports = {
-    create: function (req, res) {
+    create: function (req, res, next) {
         activityModel.create({
                 ...req.body,
                 likes: null,
@@ -10,9 +10,7 @@ module.exports = {
                 filter: `${req.body.title} ${req.body.description} ${req.body.tags} ${req.body.category}`
             })
                 .then( user => res.json({ user }))
-            .catch(e => {
-                throw new Error(e)
-                })
+            .catch(next)
     },
     getOne: function (req, res, next) {
         activityModel
@@ -25,7 +23,7 @@ module.exports = {
             })
             .catch(next)
     },
-    update: function (req, res) {
+    update: function (req, res, next) {
         activityModel
             .updateOne(
                 { _id:  req.query.activityId, creator: req.user._id },
@@ -37,9 +35,7 @@ module.exports = {
                 }
             )
                 .then((data) =>  res.json({ success: true }))
-                .catch(e => {
-                    throw new Error(e)
-                })
+                .catch(next)
     },
     delete: async function (req, res, next) {
         try {
@@ -53,16 +49,12 @@ module.exports = {
         activityModel
             .find()
             .then(activities => res.json({ activities }))
-            .catch(e => {
-                throw new Error(e)
-            })
+            .catch(next)
     },
-    search: function (req, res) {
+    search: function (req, res, next) {
         activityModel
             .find({filter: { $regex: new RegExp(req.query.search, "i") }})
             .then(data => res.json({ data }))
-            .catch(e => {
-                throw new Error(e)
-            })
+            .catch(next)
     }
 }

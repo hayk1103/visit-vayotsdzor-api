@@ -6,15 +6,13 @@ module.exports = {
             user: req.user
         })
     },
-    getUser: function (req, res) {
+    getUser: function (req, res, next) {
         userModel
             .findOne({ username: req.query.username })
             .then(user => res.json({ user }))
-            .catch(e => {
-                throw new Error(e)
-            })
+            .catch(next)
     },
-    update: function (req, res) {
+    update: function (req, res, next) {
         ['_id', '_v', 'createdAt', 'updatedAt', 'password', 'email'].forEach(field => delete req.body[field]) 
 
         userModel
@@ -23,21 +21,17 @@ module.exports = {
                 { $set: req.body }
             )
             .then(() => res.json({ success: true }))
-            .catch(e => {
-                throw new Error(e)
-            })
+            .catch(next)
     },
-    delete: function (req, res) {
+    delete: function (req, res, next) {
         userModel
             .deleteOne(
                 { _id: req.user._id }
             )
             .then(() =>  res.json({ success: true }))
-            .catch(err => {
-                throw new Error(e)
-            })
+            .catch(next)
     },
-    search: function (req, res) {
+    search: function (req, res, next) {
         userModel
             .find({ $or: 
                 [
@@ -46,8 +40,6 @@ module.exports = {
                 ]
             })
             .then(data => res.json({ data }))
-            .catch(e => {
-                throw new Error(e)
-            })
+            .catch(next)
     }
 }

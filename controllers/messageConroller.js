@@ -1,21 +1,19 @@
 const messageModel = require('../models/message')
 module.exports = {
-    add: function (req, res) {
+    add: function (req, res, next) {
         messageModel
             .create({
                 ...req.body,
                 userId: req.user._id
             })
-            .then(data => console.log({ data}))
-            .catch(console.log)
+            .then(data => res.json({ data}))
+            .catch(next)
     },
-    get: function (req, res) {
+    get: function (req, res, next) {
         messageModel
             .find()
             .populate('userId', 'username')
             .then(message => res.json({ message }))
-            .catch((e) => {
-                throw new Error(e)
-            })
+            .catch(next)
     } 
 }
