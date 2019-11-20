@@ -9,8 +9,11 @@ module.exports = {
                 creator: req.user._id,
                 filter: `${req.body.title} ${req.body.description} ${req.body.tags} ${req.body.category}`
             })
-                .then( user => res.json({ user }))
+            .then( user => res.json({ user }))
             .catch(next)
+            activityModel.createIndexes({"filter": "text"})
+                // then(data => console.log(data))
+                // .catch(next)
     },
     getOne: function (req, res, next) {
         activityModel
@@ -45,7 +48,7 @@ module.exports = {
             return next(e)
         }
     },
-    getAll: function (req, res) {
+    getAll: function (req, res, next) {
         activityModel
             .find()
             .then(activities => res.json({ activities }))
@@ -53,8 +56,11 @@ module.exports = {
     },
     search: function (req, res, next) {
         activityModel
-            .find({filter: { $regex: new RegExp(req.query.search, "i") }})
-            .then(data => res.json({ data }))
+            .find({ $text: { $search: new RegExp(req.query.search, "i") }})
+            .then(data => {
+                res.json({ data })
+                console.log(data)
+            })
             .catch(next)
     }
 }
