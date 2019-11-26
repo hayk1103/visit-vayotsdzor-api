@@ -40,6 +40,36 @@ module.exports = {
                 .then((data) =>  res.json({ success: true }))
                 .catch(next)
     },
+    updateLike: function (req, res, next) {
+        if(!req.body.like) {
+            activityModel.update(
+                {
+                    _id: req.query.activityId, 
+                    likes: { $ne: req.user._id }
+                },
+                {
+                    // $inc: { likeCount: 1 },
+                    $push: { likes: req.user._id}
+                }
+            )
+            .then(data => res.json({ liked: true}))
+            .catch(next)
+        }
+         else if(req.body.like) {
+            activityModel.update(
+                {
+                    _id: req.query.activityId, 
+                    likes: {$eq: req.user._id} 
+                },
+                {
+                    // $inc: { likeCount: -1 },
+                    $pull: { likes: req.user._id } 
+                }
+            )
+            .then(data => res.json({ liked: false}))
+            .catch(next)
+        }
+    }, 
     delete: async function (req, res, next) {
         try {
             await activityModel.deleteOne({ _id: req.query.activityId, creator: req.user._id })

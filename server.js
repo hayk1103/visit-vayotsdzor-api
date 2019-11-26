@@ -45,6 +45,7 @@ app.get('/api/activity',  activityController.getOne)
 app.get('/api/activities', activityController.getAll)
 app.post('/api/activity', useAuth, activityController.create)
 app.put('/api/activity', useAuth, activityController.update)
+app.put('/api/activity', useAuth, activityController.updateLike)
 app.delete('/api/activity', useAuth, activityController.delete)
 // search router
 app.get('/api/activity/search', activityController.search)
