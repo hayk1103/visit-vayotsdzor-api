@@ -6,7 +6,7 @@ const activitySchema = new mongoose.Schema({
         required: [true, 'Title field is required!']
     },
     location: {
-        type: String,
+        type: [Number],
         required: [true, 'Location field is required!']
     },
     image: {
