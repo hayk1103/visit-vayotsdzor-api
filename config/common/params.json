@@ -1,0 +1,61 @@
+{
+  "model": {
+    "attributes": {
+      "userAttributes": [
+        "id",
+        "firstName",
+        "lastName",
+        "email",
+        "phone",
+        "accountType"
+      ],
+      "locationAttributes": [
+        "id",
+        "city",
+        "state",
+        "country",
+        "zipCode"
+      ]
+    },
+    "seedData": {
+      "user": {
+        "count": 50,
+        "phone": "+37477006<%= index %>",
+        "id": "cf5ef2e7-b7da-41f9-af53-6ebc14a4e<%= index %>"
+      },
+      "business": {
+        "phone": "+37477006<%= index %>",
+        "id": "cf5ef2e7-b7da-41f9-af53-6ebc15a4e<%= index %>"
+      },
+      "categories": {
+        "id": "cf5ef2e7-b7da-41f9-af53-6ebc16a4e<%= index %>"
+      }
+    }
+  },
+  "files": {
+    "avatars": {
+      "allowed": {
+        "size": 26214400,
+        "extensions": [
+          "jpg",
+          "jpeg",
+          "png"
+        ]
+      }
+    }
+  },
+  "validation": {},
+  "mailer": {
+    "from": "alixanyangagik@gmail.com",
+    "templates": {
+      "activation": {
+        "templateId": "64f52f43-9524-414d-877d-4ff7eaffb28c",
+        "subject": "Activation ✔"
+      },
+      "forgotPassword": {
+        "templateId": "64f52f43-9524-414d-877d-4ff7eaffb28c",
+        "subject": "Forgot password ✔"
+      }
+    }
+  }
+}

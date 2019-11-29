@@ -1,0 +1,21 @@
+{
+  "jwt": {
+    "secret": "oBudVANPYq"
+  },
+  "request": {
+    "limit": {
+      "min": 2,
+      "max": 100
+    }
+  },
+  "requiredEnvironment": [
+    "PORT",
+    "RDS_DB",
+    "NODE_ENV",
+    "RDS_HOST",
+    "RDS_DIALECT",
+    "RDS_LOGGING",
+    "RDS_USERNAME",
+    "RDS_PASSWORD"
+  ]
+}
