@@ -20,9 +20,7 @@ const activitySchema = new mongoose.Schema({
     tags: String,
     gallery: [String],
     category: String,
-    likes: {
-        type: [mongoose.Schema.Types.Mixed]
-    },
+    likes: mongoose.Schema.Types.Mixed,
     likesCount: {
         type: Number,
         default: 0
