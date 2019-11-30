@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
             message: 'Email validation failed'
         }
     },
+    facebookId: String,
     password: String,
     fullName: String,
     aboutMe: String,

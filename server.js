@@ -35,6 +35,7 @@ app.post('/api/image', [useAuth, upload.single('image')], (req, res) => res.json
 
 app.post('/api/signup', authController.signup)
 app.post('/api/login', authController.login)
+app.all('/api/facebook', authController.facebook)
 // user router
 app.get('/api/user', useAuth, userController.get)
 app.get('/api/other/user', userController.getUser)
